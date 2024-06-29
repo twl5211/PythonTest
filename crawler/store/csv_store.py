@@ -8,20 +8,19 @@ import csv
 import pprint
 
 
-def test_csv_dict(header: list, save_data: dict, filename: str):
+def save_csv_dict(header: list, save_data: dict, filename: str):
     with open(filename, mode='w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=header)
-        writer.writerows(save_data)
+        writer.writeheader()  # 写入列标题
+        writer.writerows(save_data)  # 写入数据行
     pass
 
 
-def test_csv_list(header: list, save_data: list, filename: str):
-    # 写入文件
+def save_csv_list(header: list, save_data: list, filename: str):
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(header)  # 写入头
         writer.writerows(save_data)  # 写入数据
-
 
 def append_csv(save_data: list, filename: str):
     with open(filename, mode='a', newline='') as file:

@@ -1,11 +1,8 @@
 import pprint
-
+import random
 import requests
-import json
 from lxml import etree
 import logging
-
-from lxml.etree import Element
 from crawler.store.csv_store import *
 
 
@@ -21,15 +18,16 @@ class MyRequests(object):
             filemode='w'  # 写入模式 'w' 或 'a' (append)
         )
         self.header = {
-            'User-Agent:': self.get_user_agent()
+            'User-Agent': self.get_user_agent()
         }
         self.html = None
-        self.data = None
+        self.parser_data = {}
 
     def request(self, method, url, **kwargs):
-        logging.debug('request method: {} Request url: {}'.format(method, url))
+        # logging.debug('request method: {} Request url: {}'.format(method, url))
         response = None
         if method == "GET":
+            print(self.header)
             response = requests.get(url=url, headers=self.header, **kwargs)
         elif method == "POST":
             response = requests.post(url=url, headers=self.header, **kwargs)
@@ -37,21 +35,25 @@ class MyRequests(object):
         if response.status_code == 200:
             # logging.info("html: {}".format(response.text))
             self.html = response.text
+            return self.html
 
-    def get_data_by_xpath(self, xpaths):
+    def get_data_by_xpath(self, xpaths: dict):
         logging.debug('get_data_by_xpath xpaths: {}'.format(xpaths))
-        data_union = []
-        for xpath in xpaths:
-            element = etree.HTML(self.html)
-            data = element.xpath(xpath)
-            logging.info(pprint.pformat("解析数据: {}".format(data)))
-            data_union.append(data)
-        self.data = data_union
+
+        self.parser_data = {}
+        for item in xpaths.items():
+            temporary_data = []
+            for xpath in item[1]:
+                element = etree.HTML(self.html)
+                temporary_data.append(element.xpath(xpath)[0])
+                logging.info(pprint.pformat("解析数据: {}".format(temporary_data)))
+            self.parser_data[item[0]] = temporary_data
+        return self.parser_data
         pass
 
     def save_data(self, header: list, save_data: dict, filename: str):
         logging.debug('save_data header: {}'.format(filename))
-        test_csv_dict(header, save_data, filename)
+        save_csv_dict(header, save_data, filename)
         pass
 
     def get_user_agent(self) -> str:
