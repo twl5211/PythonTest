@@ -20,21 +20,26 @@ class MyRequests(object):
             # filename='app.log',  # 日志文件名（如不指定，则输出到控制台）
             filemode='w'  # 写入模式 'w' 或 'a' (append)
         )
+        self.header = {
+            'User-Agent:': self.get_user_agent()
+        }
         self.html = None
         self.data = None
 
     def request(self, method, url, **kwargs):
-        global response
+        logging.debug('request method: {} Request url: {}'.format(method, url))
+        response = None
         if method == "GET":
-            response = requests.get(url = url,headers=self.get_user_agent(), **kwargs)
+            response = requests.get(url=url, headers=self.header, **kwargs)
         elif method == "POST":
-            response = requests.post(url, **kwargs)
+            response = requests.post(url=url, headers=self.header, **kwargs)
 
         if response.status_code == 200:
             # logging.info("html: {}".format(response.text))
             self.html = response.text
 
     def get_data_by_xpath(self, xpaths):
+        logging.debug('get_data_by_xpath xpaths: {}'.format(xpaths))
         data_union = []
         for xpath in xpaths:
             element = etree.HTML(self.html)
@@ -45,6 +50,7 @@ class MyRequests(object):
         pass
 
     def save_data(self, header: list, save_data: dict, filename: str):
+        logging.debug('save_data header: {}'.format(filename))
         test_csv_dict(header, save_data, filename)
         pass
 
