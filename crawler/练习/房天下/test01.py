@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time ： 2024/6/29 14:49
 # @Auth ： HongBao
-# @File ：test01.py
+# @File ：project1.py
 # @IDE ：PyCharm
 
 from crawler.util.my_requests import MyRequests
