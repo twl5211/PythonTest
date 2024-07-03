@@ -3,6 +3,12 @@
 # @Auth ： HongBao
 # @File ：base_config.py
 # @IDE ：PyCharm
+
+MYSQL_URL = '127.0.0.1'
+MYSQL_DB = 'mysql_test'
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = '123456'
+
 header_list = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79 Safari/537.36",
