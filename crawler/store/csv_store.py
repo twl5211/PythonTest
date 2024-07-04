@@ -5,27 +5,27 @@
 # @IDE ：PyCharm
 
 import csv
+import os.path
 import pprint
+from typing import List, Dict
 
 
-def save_csv_dict(header: list, save_data: dict, filename: str):
-    with open(filename, mode='w', newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=header)
-        writer.writeheader()  # 写入列标题
-        writer.writerows(save_data)  # 写入数据行
-    pass
+def save_csv_dict(save_data: List[Dict[str, any]], filename: str):
+    file_exists = os.path.isfile(filename)
+    with open(filename, mode='a' if file_exists else 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=save_data[0].keys())
+        if not file_exists:
+            writer.writeheader()  # 文件不存在时写入标题行
+        writer.writerows(save_data)  # 追加写入数据
 
 
 def save_csv_list(header: list, save_data: list, filename: str):
-    with open(filename, mode='w', newline='') as file:
+    file_exists = os.path.isfile(filename)
+    with open(filename, mode='a' if file_exists else 'w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(header)  # 写入头
+        if not file_exists:
+            writer.writerow(header)  # 写入头
         writer.writerows(save_data)  # 写入数据
-
-def append_csv(save_data: list, filename: str):
-    with open(filename, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(save_data)
 
 
 def read_csv_data(filename: str) -> list:
@@ -39,14 +39,10 @@ def read_csv_data(filename: str) -> list:
 
 
 if __name__ == '__main__':
-    data = read_csv_data('test2.csv')
-    pprint.pprint(data)
-    # data = [
-    #     ["Alice", 30, "New York"],
-    #     ["Bob", 25, "Los Angeles"],
-    #     ["Charlie", 35, "Chicago"]
-    # ]
-    #
-    # # 头
-    # header = ["Name", "Age", "City"]
-    # append_csv(data, "test2.csv")
+    data = [
+        {'Age': '30', 'City': 'beijing', 'Name': 'lisi'},
+        {'Age': '30', 'City': 'beijing', 'Name': 'lisi'},
+        {'Age': '30', 'City': 'beijing', 'Name': 'lisi'}
+    ]
+
+    save_csv_dict(data, filename='data.csv')
